@@ -118,13 +118,16 @@ metadata:
 ```
 ```diff
 + oc apply -f sftp-ava-key-conf-cm.yaml
+- Create configmap from files that included sshd_config as well
++ oc create cm sftp-ava-ssh --from-file=./ssh-keys/
 ``` 
+**Note:** for sshd_config inside configmap, please update them accordingly e.g. /opt/ssh and LogLevel DEBUG3
 
 ## Create Local Storage, PV and PVC for user sftp-data directory
 **Note:** I am testing on OCP SNO so I need to create LSO and PVC so we can create PVC for sftp data mount points
 
 if you have ODF install on hub-cluster or multi-clusters, then use StorageClass from cephfs to create PVC.
- so /dev/sdc is your local disk that from your SNO or worker node.
+ so /dev/sdc is your local disk that from your SNO or worker node(lsblk to see which disk is free).
  
 - **Create LSO (Local Storage Operator)**
 
@@ -285,6 +288,15 @@ drwxrws---    2 root     ava          16384 Jul  8 22:31 lost+found
 ```
 - **Start SFTP upload files testing**
 ```bash
+sftp -P 30024 ava@e810.nokiavf.hubcluster-1.lab.eng.cert.redhat.com
+The authenticity of host '[e810.nokiavf.hubcluster-1.lab.eng.cert.redhat.com]:30024 ([192.168.24.111]:30024)' can't be established.
+ED25519 key fingerprint is SHA256:/88BLGOa5crj1DTfkwRTCRTbsSOrWyj43ypcUs+/KM4.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '[e810.nokiavf.hubcluster-1.lab.eng.cert.redhat.com]:30024,[192.168.24.111]:30024' (ED25519) to the list of known hosts.
+ava@e810.nokiavf.hubcluster-1.lab.eng.cert.redhat.com's password: 
+Connected to ava@e810.nokiavf.hubcluster-1.lab.eng.cert.redhat.com.
+sftp> 
+
 sftp -P 30024 ava@192.168.24.111
 ava@192.168.24.111's password: 
 Connected to ava@192.168.24.111.
@@ -294,7 +306,7 @@ sftp> put oc-4.9.12-linux.tar.gz
 Uploading oc-4.9.12-linux.tar.gz to /home/ava/sftp-data/oc-4.9.12-linux.tar.gz
 oc-4.9.12-linux.tar.gz     100%   47MB   9.6MB/s   00:06
 
-sftp> ls -lrt
+sftp> ls -lrt sftp-data
 drwxrws---    2 root     ava         16384 Jul  8 22:31 lost+found
 -rw-r--r--    1 ava      ava           227 Jul 11 16:37 pvc.yaml
 -rw-r--r--    1 ava      ava      49412507 Jul 11 18:36 oc-4.9.12-linux.tar.gz
