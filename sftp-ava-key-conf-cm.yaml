@@ -2,22 +2,19 @@ apiVersion: v1
 data:
   ssh_host_ed25519_key: |
     -----BEGIN OPENSSH PRIVATE KEY-----
-    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
     .......
     .......
-    AAAEAt4Rzz5a0BCrhzuHXuZkW8gJrbFMeUG5wWryrXRNP1inKkgD8mBsfq2WR8UwrgPoI0
-    mVesTNEo9aBBiswNbWuxAAAAEmF2dUBhdnUucmVtb3RlLmNzYgECAw==
+    .......
+    .......
     -----END OPENSSH PRIVATE KEY-----
   ssh_host_ed25519_key.pub: |
-    ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHKkgD8mBsfq2WR8UwrgPoI0mVesTNEo9aBBiswNbWux xxxxxxxxxxxxxxxxx
+    ssh-ed25519 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxx
   ssh_host_rsa_key: |
     -----BEGIN OPENSSH PRIVATE KEY-----
-    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAACFwAAAAdzc2gtcn
-    NhAAAAAwEAAQAAAgEA8hiQQIvis4/ur/tBOHfQ9/5Sn/URZKdhvP7zSb5trLdekDcss9sr
     ............
     ............
-    b1tx9skaW1uUAXxpVOostm+5tV6f4YHdR0jcapLXmx3/gZPztOsk+3Z+mNC/pHYODLNF0T
-    TTGefPih42cAAAASYXZ1QGF2dS5yZW1vdGUuY3NiAQ==
+    ............
+    ............
     -----END OPENSSH PRIVATE KEY-----
   ssh_host_rsa_key.pub: |
     ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDyGJBAixxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
