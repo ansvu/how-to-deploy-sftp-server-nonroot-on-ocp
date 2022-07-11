@@ -303,16 +303,22 @@ drwxrws---    2 root     ava         16384 Jul  8 22:31 lost+found
 ## Limitations When Run SSHD service non-root User
 
 - **Only user to run SSHD service can be used as sftp***
+
 So if we create another user it wont allow it to use to DO sftp or authenticate
 As mentioned here from this link https://www.golinuxcloud.com/run-sshd-as-non-root-user-without-sudo/
 I also created another from Dockerfile with ava user is used to run sshd, I also got denied as above link had stated as well.
 
 - **Can not used entrypoint script to create user based on configmap**
-The problem is if we create user using entrypoint, we can not create that user since useradd or groupadd wont allow to update to /etc/group or /etc/passwd. 
-So it means, we can only create user/setpasswd during Dockerfile image build!!!
 
-- **Another Limitation is can not set chpasswd -e for this user***
+The problem is if we create user using entrypoint, we can not create that user since useradd or groupadd wont allow to update to /etc/group or /etc/passwd. So it means, we can only create user/setpasswd during Dockerfile image build!!!
+
+- **Another Limitation is can not set chpasswd -e for this user**
+
 It allowed to change/update with encrypted password but when using sftp to upload/authenticate, it got denied, from /etc/shadow, the contents shown weird
 
 **Note: if someone can advice and have WA, that would be great!!!!**
 
+## All above steps can be compiled or done in helm chart 
+- If needed I can make a helm chart to it can be simplified the the deployment
+- Since it has limitations, this repository can be used as starting point for further idea/enhancement
+- Thanks to the blogs and google for all info!
