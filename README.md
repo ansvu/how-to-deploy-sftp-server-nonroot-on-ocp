@@ -249,6 +249,9 @@ spec:
         persistentVolumeClaim:
           claimName: femto-data-store
 ```
+**Note:** /home/ava (ava) is the user created on Dockerfile, so update it on deployment yaml file to match.
+          Also 2022 and runAsUser 1000 are also need to update accordingly. 
+
 ```diff
 + oc apply -f create-sftpnoroot-deploy-cm.yaml
 + oc get po
