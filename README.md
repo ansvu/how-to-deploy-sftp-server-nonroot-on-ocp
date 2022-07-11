@@ -289,7 +289,7 @@ drwxrws---    2 root     ava          16384 Jul  8 22:31 lost+found
 ```bash
 sftp -P 30024 ava@e810.nokiavf.hubcluster-1.lab.eng.cert.redhat.com
 The authenticity of host '[e810.nokiavf.hubcluster-1.lab.eng.cert.redhat.com]:30024 ([192.168.24.111]:30024)' can't be established.
-ED25519 key fingerprint is SHA256:/88BLGOa5crj1DTfkwRTCRTbsSOrWyj43ypcUs+/KM4.
+ED25519 key fingerprint is SHA256:/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.
 Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 Warning: Permanently added '[e810.nokiavf.hubcluster-1.lab.eng.cert.redhat.com]:30024,[192.168.24.111]:30024' (ED25519) to the list of known hosts.
 ava@e810.nokiavf.hubcluster-1.lab.eng.cert.redhat.com's password: 
