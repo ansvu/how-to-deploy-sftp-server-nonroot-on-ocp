@@ -49,6 +49,9 @@ spec:
 ```
 ```diff
 + oc apply -f sftp-noroot-svc.yaml
++ oc get svc
+NAME          TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+sftp-noroot   NodePort   172.30.79.100   <none>        2022:30024/TCP   2d21h
 ```
 
 ## Create SFTP Server Configmap that contain the SSH Keys and sshd_config files
@@ -160,7 +163,7 @@ local-pv-ad6ab568   447Gi      RWO            Delete           Bound    sftp-nor
 NAME                      PROVISIONER                    RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
 local-storage (default)   kubernetes.io/no-provisioner   Delete          WaitForFirstConsumer   false                  2d19h
 ```
-- ** Edit PV to change RWO to RWX (ReadWriteOnce --> ReadWriteMany)**
+- **Edit PV to change RWO to RWX (ReadWriteOnce --> ReadWriteMany)**
 ```diff
 + oc edit pv local-pv-ad6ab568
 spec:
@@ -190,4 +193,126 @@ spec:
 NAME               STATUS   VOLUME              CAPACITY   ACCESS MODES   STORAGECLASS    AGE
 femto-data-store   Bound    local-pv-ad6ab568   447Gi      RWX            local-storage   2d19h
 ```
+## Deploy SFTP Server 
+- **For OCP, add anyuid to SCC ServiceAcount and Namespace**
+```diff
++ oc adm policy add-scc-to-user anyuid -z noroot-sa system:serviceaccount:sftp-noroot:noroot-sa
+```
+**Note: noroot-sa=sa and sftp-noroot=ns**
+
+- **Start Deploy SFTP Server**
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sftp-noroot
+  name: sftp-noroot-cm
+  namespace: sftp-noroot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sftp-noroot
+  template:
+    metadata:
+      labels:
+        app: sftp-noroot
+    spec:
+      serviceAccountName: noroot-sa            
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - image: quay.io/avu0/sftp-noroot:v7
+        imagePullPolicy: IfNotPresent
+        name: sftp-noroot
+        ports:
+        - containerPort: 2022
+          name: ssh
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /opt/ssh
+          name: sftp-ava-ssh
+        - mountPath: /home/ava/sftp-data
+          name: sftp-femto-ava          
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 384
+          name: sftp-ava-ssh
+        name: sftp-ava-ssh
+      - name: sftp-femto-ava
+        persistentVolumeClaim:
+          claimName: femto-data-store
+```
+```diff
++ oc apply -f create-sftpnoroot-deploy-cm.yaml
++ oc get po
+NAME                              READY   STATUS    RESTARTS   AGE
+sftp-noroot-cm-5c95546fd5-6sfws   1/1     Running   0          112m
+```
+
+## Start SFTP Server Testing
+- **Checking SSHD Service running as normal user**
+```bash
+oc exec -it sftp-noroot-cm-5c95546fd5-6sfws bash
+bash-5.1$ ps -ef
+PID   USER     TIME  COMMAND
+    1 ava       0:00 sshd: /usr/sbin/sshd -D -f /opt/ssh/sshd_config -E /tmp/sshd.log [listener] 0 of 10-100 startups
+   15 ava       0:00 bash
+   22 ava       0:00 ps -ef
+
+df -h
+Filesystem                Size      Used Available Use% Mounted on
+overlay                 446.6G     92.5G    354.1G  21% /
+/dev/sdb4               446.6G     92.5G    354.1G  21% /opt/ssh
+tmpfs                    93.8G     79.4M     93.7G   0% /run/secrets
+/dev/sdc                439.1G    119.2M    439.0G   0% /home/ava/sftp-data
+
+bash-5.1$ ls -lrt /opt/ssh/
+total 0
+lrwxrwxrwx    1 root     ava             18 Jul 11 16:36 sshd_config -> ..data/sshd_config
+lrwxrwxrwx    1 root     ava             27 Jul 11 16:36 ssh_host_rsa_key.pub -> ..data/ssh_host_rsa_key.pub
+lrwxrwxrwx    1 root     ava             23 Jul 11 16:36 ssh_host_rsa_key -> ..data/ssh_host_rsa_key
+lrwxrwxrwx    1 root     ava             31 Jul 11 16:36 ssh_host_ed25519_key.pub -> ..data/ssh_host_ed25519_key.pub
+lrwxrwxrwx    1 root     ava             27 Jul 11 16:36 ssh_host_ed25519_key -> ..data/ssh_host_ed25519_key
+bash-5.1$ ls -lrt /home/ava/sftp-data/
+total 20
+drwxrws---    2 root     ava          16384 Jul  8 22:31 lost+found
+-rw-r--r--    1 ava      ava            227 Jul 11 16:37 pvc.yaml
+```
+- **Start SFTP upload files testing**
+```bash
+sftp -P 30024 ava@192.168.24.111
+ava@192.168.24.111's password: 
+Connected to ava@192.168.24.111.
+
+sftp> cd sftp-data/
+sftp> put oc-4.9.12-linux.tar.gz 
+Uploading oc-4.9.12-linux.tar.gz to /home/ava/sftp-data/oc-4.9.12-linux.tar.gz
+oc-4.9.12-linux.tar.gz     100%   47MB   9.6MB/s   00:06
+
+sftp> ls -lrt
+drwxrws---    2 root     ava         16384 Jul  8 22:31 lost+found
+-rw-r--r--    1 ava      ava           227 Jul 11 16:37 pvc.yaml
+-rw-r--r--    1 ava      ava      49412507 Jul 11 18:36 oc-4.9.12-linux.tar.gz
+```
+
+## Limitations When Run SSHD service non-root User
+
+- **Only user to run SSHD service can be used as sftp***
+So if we create another user it wont allow it to use to DO sftp or authenticate
+As mentioned here from this link https://www.golinuxcloud.com/run-sshd-as-non-root-user-without-sudo/
+I also created another from Dockerfile with ava user is used to run sshd, I also got denied as above link had stated as well.
+
+- **Can not used entrypoint script to create user based on configmap**
+The problem is if we create user using entrypoint, we can not create that user since useradd or groupadd wont allow to update to /etc/group or /etc/passwd. 
+So it means, we can only create user/setpasswd during Dockerfile image build!!!
+
+- **Another Limitation is can not set chpasswd -e for this user***
+It allowed to change/update with encrypted password but when using sftp to upload/authenticate, it got denied, from /etc/shadow, the contents shown weird
+
+**Note: if someone can advice and have WA, that would be great!!!!**
 
