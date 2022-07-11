@@ -149,7 +149,7 @@ spec:
 ```diff
 + oc apply -f fs-pv-sdc.yaml
 ```
-```bash
+```diff
 + oc get po -n openshift-local-storage
 NAME                                      READY   STATUS    RESTARTS        AGE
 diskmaker-manager-sk27k                   2/2     Running   0               2d19h
