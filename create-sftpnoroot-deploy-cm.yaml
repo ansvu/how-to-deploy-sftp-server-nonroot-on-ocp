@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sftp-noroot
+  name: sftp-noroot-cm
+  namespace: sftp-noroot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sftp-noroot
+  template:
+    metadata:
+      labels:
+        app: sftp-noroot
+    spec:
+      serviceAccountName: noroot-sa            
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - image: quay.io/avu0/sftp-noroot:v7
+        imagePullPolicy: IfNotPresent
+        name: sftp-noroot
+        ports:
+        - containerPort: 2022
+          name: ssh
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /opt/ssh
+          name: sftp-ava-ssh
+        - mountPath: /home/ava/sftp-data
+          name: sftp-femto-ava          
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 384
+          name: sftp-ava-ssh
+        name: sftp-ava-ssh
+      - name: sftp-femto-ava
+        persistentVolumeClaim:
+          claimName: femto-data-store        

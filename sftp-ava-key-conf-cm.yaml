@@ -1,0 +1,83 @@
+apiVersion: v1
+data:
+  ssh_host_ed25519_key: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+    QyNTUxOQAAACBypIA/JgbH6tlkfFMK4D6CNJlXrEzRKPWgQYrMDW1rsQAAAJgZO+JRGTvi
+    UQAAAAtzc2gtZWQyNTUxOQAAACBypIA/JgbH6tlkfFMK4D6CNJlXrEzRKPWgQYrMDW1rsQ
+    AAAEAt4Rzz5a0BCrhzuHXuZkW8gJrbFMeUG5wWryrXRNP1inKkgD8mBsfq2WR8UwrgPoI0
+    mVesTNEo9aBBiswNbWuxAAAAEmF2dUBhdnUucmVtb3RlLmNzYgECAw==
+    -----END OPENSSH PRIVATE KEY-----
+  ssh_host_ed25519_key.pub: |
+    ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHKkgD8mBsfq2WR8UwrgPoI0mVesTNEo9aBBiswNbWux ava@ava.remote.csb
+  ssh_host_rsa_key: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    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
+    -----END OPENSSH PRIVATE KEY-----
+  ssh_host_rsa_key.pub: |
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDyGJBAi+Kzj+6v+0E4d9D3/lKf9RFkp2G8/vNJvm2st16QNyyz2yuhodyjMwjbMgPFWCQD3p8Im805rGLkxCgylB5BNJUa3Qa+Cghj9b7Lg8nB8O7h0qjM35Jw2KQDjNtthTjHe80z5L8hkCMLXk1jd1yO406jDPFNM0U+5gorDgc4uEwH/ZWOJJlFNnadW93O51Pydi9mKqGHV1194Cv+/n/XP9/yauWKrjldo/YMTCePsPjopN7Vyy3Giw46oHwNuxlog+cXRUhzkxFbYSNltan3bla/oFOIp8sWEkRwbPPUiY4EtmR6gFZqko5xtEDuWXvMO10XR76mgSuK04t2Xq78IBilQM7bDGNu7LF+RXGZv/7vnBY5TkwEqR+Pz5EMzkoirUHVce+XZAdQ94yDkikEDgq+uAfavOv/0lQHdC+kKdUaibDP0EdSsiPxphXEJwCsMvG0nEL47hwPDzcj/9R2OafJ2oRVn5wj1VvpoEMM791dXhtt70zD2SivooIh9LfG4b5Q7PRntZ2nZpgpY2o7v7DWXLtxR7Voq/z14Uv5jHKbSvcVch3Q8pPgJ28cFHllocu8ziqV1hNRrWp3nSUDOvzlX8TeL6ygykbqSFRlnk4+GiuulcQJ97STr2atLGlMcPqwa8/xImykPEMfs6iC8rCymLssN+JuvpVSrQ== ava@ava.remote.csb
+  sshd_config: |
+    Protocol 2
+    HostKey /opt/ssh/ssh_host_ed25519_key
+    HostKey /opt/ssh/ssh_host_rsa_key
+    UseDNS no
+    PermitRootLogin no
+    X11Forwarding no
+    AllowTcpForwarding no
+    Subsystem sftp internal-sftp
+    ForceCommand internal-sftp
+    LogLevel DEBUG3
+    Port 2022
+    PidFile /opt/ssh/sshd.pid
+    ChallengeResponseAuthentication no
+    UsePAM yes
+kind: ConfigMap
+metadata:
+  name: sftp-ava-ssh
+  namespace: sftp-noroot

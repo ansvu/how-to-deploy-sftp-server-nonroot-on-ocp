@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: femto-data-store
+spec:
+  accessModes:
+  - ReadWriteMany
+  volumeMode: Filesystem 
+  resources:
+    requests:
+      storage: 447Gi 
+  #storageClassName: local-storage

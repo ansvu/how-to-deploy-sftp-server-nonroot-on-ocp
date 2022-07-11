@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sftp-noroot
+  namespace: sftp-noroot
+spec:
+  ports:
+  - name: 2022-tcp
+    nodePort: 30024
+    port: 2022
+    protocol: TCP
+    targetPort: 2022
+  selector:
+    app: sftp-noroot
+  type: NodePort
