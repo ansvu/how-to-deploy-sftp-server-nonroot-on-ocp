@@ -176,17 +176,18 @@ spec:
 - **Create PVC for sftp-data mount directory**
 **Note:** if you have StorageClass from ODF other SC, uncomment out last line and give your SC name 
 ```yaml
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
   name: femto-data-store
+  namespace: sftp-noroot
 spec:
   accessModes:
-  - ReadWriteMany
-  volumeMode: Filesystem 
+    - ReadWriteOnce
+  volumeMode: Filesystem
   resources:
     requests:
-      storage: 447Gi 
+      storage: 20Gi 
   #storageClassName: local-storage
 ```
 ```diff
