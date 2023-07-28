@@ -1,12 +1,13 @@
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
   name: femto-data-store
+  namespace: sftp-noroot
 spec:
   accessModes:
-  - ReadWriteMany
-  volumeMode: Filesystem 
+    - ReadWriteOnce
+  volumeMode: Filesystem
   resources:
     requests:
-      storage: 447Gi 
+      storage: 20Gi
   #storageClassName: local-storage
